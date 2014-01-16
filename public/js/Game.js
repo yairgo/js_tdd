@@ -4,7 +4,7 @@ function Game() {
 Game.prototype.getTotalScore = function() {
     var score = 0;
     for(var i = 0; i < this.frames.length; i++) {
-        
+        score += this.frames[i].getScore();
     }
     return score;
 };
