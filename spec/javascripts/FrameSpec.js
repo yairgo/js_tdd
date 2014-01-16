@@ -19,7 +19,34 @@ describe("Frame", function() {
     });
     
     it("should not be a spare", function() {
-      expect(myFrame.isSpare).toBeFalsy();
+      expect(myFrame.isSpare()).toBeFalsy();
+    });
+    
+    it("should score 10 points", function() {
+      expect(myFrame.getScore()).toEqual(10);
+    });
+  });
+  
+  describe("when the first two frame equal 10 pins", function() {
+    beforeEach(function() {
+      myFrame.addScore(7);
+      myFrame.addScore(3);
+    });
+
+    it("should not be a strike", function() {
+      expect(myFrame.isStrike()).toBeFalsy();
+    });
+
+    it("should be the end of the turn", function() {
+      expect(myFrame.isTurnOver()).toBeTruthy();
+    });
+    
+    it("should be a spare", function() {
+      expect(myFrame.isSpare()).toBeTruthy();
+    });
+    
+    it("should score 10 points", function() {
+      expect(myFrame.getScore()).toEqual(10);
     });
   });
 });
