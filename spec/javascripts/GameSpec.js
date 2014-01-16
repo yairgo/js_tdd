@@ -32,12 +32,18 @@ describe("Game", function() {
     });
   });
   
-  describe("can get the score for a frame", function() {
+  describe("can get the score for the first frame when there are two strikes after it", function() {
+    var frame;
     beforeEach(function() {
-      
+      frame = new Frame();
+      frame.addScore(10);
+      myGame.addFrame(frame);
+      myGame.addFrame(frame);
+      myGame.addFrame(frame);
     });
 
-    it("should score 10 points", function() {
+    it("should score 30 points", function() {
+        expect(myGame.getScoreForFrame(0)).toEqual(30);
     });
   });
 });
