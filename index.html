@@ -3,89 +3,97 @@
   <title>Bowling Score Calculator</title>
   <script type="text/javascript" src="public/js/jquery.js"></script>
   <script type="text/javascript" src="public/js/bowling.js"></script>
+   <style>
+  .inputs {
+    float: left;
+    margin-right: 1em;
+  }
+  .inputs p {
+    margin-top: 0;
+  }
+  td {
+    width: 7%;
+    height: 19;
+    background-color: #005388;
+    text-align: center;
+  }
+  </style>k
 </head>
 
 <body bgcolor="#EAFFFF">
-  <h1>B<font size="5">
-      <span style="font-weight: 400">OWLING</span> </font>S
-    <span style="font-weight: 400">
-      <font size="5">CORE</font></span> C<span style="font-weight: 400"><font size="5">ALCULATOR</font></span></h1>
-<form name="score">
-&nbsp;<center>
-<table border="1" cellspacing="1" width="100%" id="AutoNumber1" height="45">
-  <tr>
-    <td width="7%" height="19" bgcolor="#003399"><font color="#FFFFFF"><b>Frame</b></font></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>1</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>2</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>3</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>4</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>5</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>6</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>7</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>8</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>9</b></td>
-    <td width="7%" height="19" bgcolor="#99CCFF" align="center"><b>10</b></td>
-  </tr>
-  <tr>
-    <td width="7%" height="16" bgcolor="#003399"><font color="#FFFFFF"><b>Score</b></font></td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot1a">
-      <input type=text maxlength=1 size=1 name="shot1b">
-    </td>
-    <td width="7%" height="16" bgcolor="#99CCFF" align="center">
-      <input type=text maxlength=1 size=1 name="shot10a">
-      <input type=text maxlength=1 size=1 name="shot10b">
-      <input type=text maxlength=1 size=1 name="shot10c">
-    </td>
-  </tr>
-  <tr>
-    <td>total: <strong id="total"></strong></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-<input type=reset value="Clear Form"></p>
-</center>
-</form>
+  <h1>B<font size="5"><span style="font-weight: 400">OWLING</span> </font>
+      S<span style="font-weight: 400"><font size="5">CORE</font></span>
+      C<span style="font-weight: 400"><font size="5">ALCULATOR</font></span>
+    </h1>
+  <form name="score">
+    &nbsp;
+    <center>
+      <table border="1" cellspacing="1" width="100%" id="AutoNumber1" height="45">
+        <tr>
+          <td ><font color="#FFFFFF"><b>Frame</b></font></td>
+          <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+        </tr>
+        <tr>
+          <td><font color="#FFFFFF">Score</font></td>
+          <td class"frame" id"frame1">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame2">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame3">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame4">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame5">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame6">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame7">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame8">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame9">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+          </td>
+          <td class"frame" id"frame10">
+            <input type=text size=1 name="shot1">
+            <input type=text size=1 name="shot2">
+            <input type=text size=1 name="shot3">
+          </td>
+        </tr>
+        <tr>
+          <td>total: <strong id="total"></strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+      <input type=reset value="Clear Form"></p>
+    </center>
+  </form>
 <p><i>Score: <b>0-9</b> <font color="#C0C0C0">or</font> <b>x </b>
 <font color="#C0C0C0">or</font><b> /</b></i> </p>
 <hr>
