@@ -6,13 +6,13 @@ Game.prototype.getTotalScore = function() {
 };
 
 Game.prototype.getFrames = function() {
-    return 0;
+    return this.frames;
 };
 
 Game.prototype.getScoreForFrame = function() {
     return 0;
 };
 
-Game.prototype.addFrame = function() {
-    return 0;
+Game.prototype.addFrame = function(frame) {
+    this.frames[this.frames.length] = frame;
 };
