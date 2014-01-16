@@ -8,6 +8,10 @@ Frame.prototype.isSpare = function() {
 Frame.prototype.isStrike = function() {
     return this.firstScore == 10;
 };
+
+Frame.prototype.getFirstRoll = function() {
+    return this.firstScore ? this.firstScore : 0;
+};
 Frame.prototype.getScore = function() {
     var total = 0;
     if(this.firstScore) {

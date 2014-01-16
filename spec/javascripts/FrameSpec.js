@@ -13,6 +13,10 @@ describe("Frame", function() {
     it("should be a strike", function() {
       expect(myFrame.isStrike()).toBeTruthy();
     });
+    
+    it("should be able to return the first roll of the frame", function() {
+      expect(myFrame.getFirstRoll()).toEqual(10);
+    });
 
     it("should be the end of the turn", function() {
       expect(myFrame.isTurnOver()).toBeTruthy();
@@ -35,6 +39,10 @@ describe("Frame", function() {
 
     it("should not be a strike", function() {
       expect(myFrame.isStrike()).toBeFalsy();
+    });
+    
+    it("should be able to return the first roll of the frame", function() {
+      expect(myFrame.getFirstRoll()).toEqual(7);
     });
 
     it("should be the end of the turn", function() {
