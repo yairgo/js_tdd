@@ -2,7 +2,11 @@ function Game() {
     this.frames = [];
 }
 Game.prototype.getTotalScore = function() {
-    return 0;
+    var score = 0;
+    for(var i = 0; i < this.frames.length; i++) {
+        
+    }
+    return score;
 };
 
 Game.prototype.getFrames = function() {

@@ -20,11 +20,15 @@ describe("Game", function() {
   });
   
   describe("can get the total score", function() {
+    var frame;
     beforeEach(function() {
-      
+      frame = new Frame();
+      frame.addScore(10);
+      myGame.addFrame(frame);
     });
-
+    
     it("should score 10 points", function() {
+        expect(myGame.getTotalScore()).toEqual(10);
     });
   });
   
