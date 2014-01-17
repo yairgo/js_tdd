@@ -11,10 +11,8 @@ describe("InputParser", function() {
       return { val: function(v){return ex;} };
     }
     frameMock = jasmine.createSpyObj('frame', ['addScore']);
+    spyOn(window, 'Frame').and.returnValue(frameMock);
     gameMock = jasmine.createSpyObj('Game', ['addFrame']);
-    window.Frame = function() {
-      return frameMock;
-    };
     inputParser = new InputParser(gameMock);
   });
 
@@ -22,8 +20,8 @@ describe("InputParser", function() {
     it("should create a frame with 10 pins and add to the game", function() {
       var firstInput = makeInput('X');
       inputParser.parseFrame([firstInput], '1');
-      expect(frameMock.addScore).toHaveBeenCalledWith(10);
       expect(gameMock.addFrame).toHaveBeenCalledWith(frameMock);
+      expect(window.Frame).toHaveBeenCalledWith(10, 0);
     });
   });
 
@@ -32,9 +30,9 @@ describe("InputParser", function() {
       var firstInput = makeInput('4');
       var secondInput = makeInput('/');
       inputParser.parseFrame([firstInput, secondInput], '1');
-      expect(frameMock.addScore).toHaveBeenCalledWith(4);
-      expect(frameMock.addScore).toHaveBeenCalledWith(6);
+
       expect(gameMock.addFrame).toHaveBeenCalledWith(frameMock);
+      expect(window.Frame).toHaveBeenCalledWith(4, 6);
     });
   });
   describe("first input is not x and second input is number", function() {
@@ -42,9 +40,9 @@ describe("InputParser", function() {
       var firstInput = makeInput('4');
       var secondInput = makeInput('3');
       inputParser.parseFrame([firstInput, secondInput], '1');
-      expect(frameMock.addScore).toHaveBeenCalledWith(4);
-      expect(frameMock.addScore).toHaveBeenCalledWith(3);
+
       expect(gameMock.addFrame).toHaveBeenCalledWith(frameMock);
+      expect(window.Frame).toHaveBeenCalledWith(4, 3);
     });
   });
 });

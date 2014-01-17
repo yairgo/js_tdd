@@ -1,6 +1,6 @@
-function Frame() {
-    this.firstScore;
-    this.secondScore;
+function Frame(firstScore, secondScore) {
+    this.firstScore = firstScore;
+    this.secondScore = secondScore;
     this._nextFrame;
     this._nextNextFrame;
 }
@@ -52,13 +52,6 @@ Frame.prototype.getCount = function() {
 }
 Frame.prototype.isTurnOver = function() {
     return this.isStrike() || this.secondScore;
-};
-Frame.prototype.addScore = function(value) {
-    if (!this.firstScore) {
-        this.firstScore = value;
-    } else {
-        this.secondScore = value;
-    }
 };
 Frame.prototype.nextFrame = function(frame) {
   this._nextFrame = frame;

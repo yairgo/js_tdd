@@ -1,13 +1,9 @@
 describe("Frame", function() {
   var myFrame;
 
-  beforeEach(function() {
-    myFrame = new Frame();
-  });
-
   describe("when the first frame is 10 pins", function() {
     beforeEach(function() {
-      myFrame.addScore(10);
+      myFrame = new Frame(10);
     });
 
     it("should be a strike", function() {
@@ -36,8 +32,7 @@ describe("Frame", function() {
 
   describe("when the first two frames equal 10 pins", function() {
     beforeEach(function() {
-      myFrame.addScore(7);
-      myFrame.addScore(3);
+      myFrame = new Frame(7, 3);
     });
 
     it("should not be a strike", function() {
@@ -63,8 +58,7 @@ describe("Frame", function() {
 
   describe("when the first two frames equal 9 pins", function() {
     beforeEach(function() {
-      myFrame.addScore(6);
-      myFrame.addScore(3);
+      myFrame = new Frame(6, 3);
     });
 
     it("should not be a strike", function() {
@@ -88,18 +82,12 @@ describe("Frame", function() {
     });
   });
   describe('getScore', function() {
-    var strike = new Frame();
-    strike.addScore(10);
-    var spare = new Frame();
-    spare.addScore(8);
-    spare.addScore(2);
-    var open = new Frame();
-    open.addScore(4);
-    open.addScore(3);
+    var strike = new Frame(10);
+    var spare = new Frame(8, 2);
+    var open = new Frame(4, 3);
     describe('strike with open', function(){
       it('should be 10 plus open total', function() {
-        var to = new Frame();
-        to.addScore(10);
+        var to = new Frame(10);
         to.nextFrame(open);
         to.nextNextFrame(spare);
         expect(to.getScore()).toEqual(10 + open.getCount());
@@ -107,31 +95,27 @@ describe("Frame", function() {
     });
     describe('strike with strike', function(){
       it('and non strike should be 20 plus first ball', function() {
-        var to = new Frame();
-        to.addScore(10);
+        var to = new Frame(10);
         to.nextFrame(strike);
         to.nextNextFrame(open);
         expect(to.getScore()).toEqual(20 + open.firstScore);
       });
       it('and no next ball should be 20', function() {
-        var to = new Frame();
-        to.addScore(10);
+        var to = new Frame(10);
         to.nextFrame(strike);
         expect(to.getScore()).toEqual(20);
       });
     });
     describe('strike with spare', function(){
       it('should be 20', function() {
-        var to = new Frame();
-        to.addScore(10);
+        var to = new Frame(10);
         to.nextFrame(spare);
         expect(to.getScore()).toEqual(20);
       });
     });
     describe('spare', function(){
       it('should be 10 plus next count', function() {
-        var to = new Frame();
-        to.addScore(5); to.addScore(5);
+        var to = new Frame(5, 5);
         to.nextFrame(open);
         expect(to.getScore()).toEqual(10 + open.getCount());
       });
@@ -140,24 +124,20 @@ describe("Frame", function() {
   describe('isFinished', function() {
     describe('when open', function() {
       it('should be correct', function() {
-        var to = new Frame();
-        to.addScore(4);
+        var to = new Frame(4);
 
         expect(to.isFinished()).toBeFalsy();
 
-        to.addScore(3);
+        var to = new Frame(4, 3);
 
         expect(to.isFinished()).toBeTruthy();
       });
     });
     describe('when spare', function() {
       it('should be correct', function() {
-        var to = new Frame();
-        to.addScore(4);
-        to.addScore(6);
+        var to = new Frame(4, 6);
         expect(to.isFinished()).toBeFalsy();
-        var next = new Frame();
-        next.addScore(5);
+        var next = new Frame(5);
         to.nextFrame(next);
         expect(to.isFinished()).toBeTruthy();
       });
@@ -165,12 +145,10 @@ describe("Frame", function() {
     describe('when strike', function() {
       var to;
       beforeEach(function() {
-        to = new Frame();
-        to.addScore(10);
+        to = new Frame(10);
       })
       it('with another strike', function() {
-        var strike = new Frame();
-        strike.addScore(10);
+        var strike = new Frame(10);
         to.nextFrame(strike);
 
         expect(to.isFinished()).toBeFalsy();
@@ -180,23 +158,21 @@ describe("Frame", function() {
 
       })
       it('with a spare', function() {
-        var spare = new Frame();
-        spare.addScore(4); spare.addScore(6);
+        var spare = new Frame(4, 6);
         to.nextFrame(spare);
 
         expect(to.isFinished()).toBeTruthy();
       });
       it('with an open', function() {
-        var open = new Frame();
-        open.addScore(4); open.addScore(5);
+        var open = new Frame(4, 5);
         to.nextFrame(open);
 
         expect(to.isFinished()).toBeTruthy();
       });
       it('with an unfinished next frame', function() {
-        var next = new Frame();
-        next.addScore(3);
+        var next = new Frame(3);
 
+        expect(to.isFinished()).toBeFalsy();
       });
     });
   });

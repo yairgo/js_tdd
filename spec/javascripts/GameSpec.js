@@ -85,9 +85,7 @@ describe("Game", function() {
   describe("can get the total score of a game with one completed 9 pin frame", function() {
     var frame
     beforeEach(function() {
-      frame = new Frame();
-      frame.addScore(7);
-      frame.addScore(2);
+      frame = new Frame(7, 2);
       myGame.frames = [frame];
     });
 
