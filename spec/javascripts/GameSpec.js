@@ -172,6 +172,24 @@ describe("Game", function() {
     });
   });
   
+  describe("getScoreUpToFrame returns the total score ", function() {
+    beforeEach(function() {
+      for (var i = 0; i < 6; i++) { 
+        myGame.addFrame(spareFrame);
+      }
+    });
+
+    it("should score the appropriate points", function() {
+        expect(myGame.getScoreForFrame(0)).toEqual(17);
+        expect(myGame.getScoreUpToFrame(0)).toEqual(17);
+        expect(myGame.getScoreUpToFrame(1)).toEqual(34);
+        expect(myGame.getScoreUpToFrame(2)).toEqual(51);
+        expect(myGame.getScoreUpToFrame(3)).toEqual(68);
+        expect(myGame.getScoreUpToFrame(4)).toEqual(85);
+        expect(myGame.getScoreUpToFrame(5)).toEqual("");
+    });
+  });
+  
   describe("getTotalScore with one strike frame completed", function() {
     beforeEach(function() {
       myGame.addFrame(strikeFrame);

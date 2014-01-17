@@ -60,6 +60,20 @@ Game.prototype.isFrameComplete = function(frameIndex) {
 };
 
 
+Game.prototype.getScoreUpToFrame = function(frameIndex) {
+    var score = 0;
+    if (!this.isFrameComplete(frameIndex)) {
+        return "";
+    } 
+    
+    for(var i = 0; i <= frameIndex; i++) {
+        if (i >= this.frames.length) { 
+            break;
+        }
+        score += this.getScoreForFrame(i);
+    }
+    return score;
+}
 Game.prototype.getScoreForNextTwoRolls = function(frameIndex) {
     var thisFrame = this.frames[frameIndex];
     if(!thisFrame) {
