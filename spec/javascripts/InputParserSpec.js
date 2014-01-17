@@ -21,7 +21,7 @@ describe("InputParser", function() {
   describe("when event is from first input and input is X", function() {
     it("should create a frame with 10 pins and add to the game", function() {
       var firstInput = makeInput('X');
-      inputParser.parseFrame(firstInput);
+      inputParser.parseFrame([firstInput], '1');
       expect(frameMock.addScore).toHaveBeenCalledWith(10);
       expect(gameMock.addFrame).toHaveBeenCalledWith(frameMock);
     });
@@ -31,7 +31,7 @@ describe("InputParser", function() {
     it("sould mark correct pins for the rest", function() {
       var firstInput = makeInput('4');
       var secondInput = makeInput('/');
-      inputParser.parseFrame(firstInput, secondInput);
+      inputParser.parseFrame([firstInput, secondInput], '1');
       expect(frameMock.addScore).toHaveBeenCalledWith(4);
       expect(frameMock.addScore).toHaveBeenCalledWith(6);
       expect(gameMock.addFrame).toHaveBeenCalledWith(frameMock);
@@ -41,7 +41,7 @@ describe("InputParser", function() {
     it("add both values", function() {
       var firstInput = makeInput('4');
       var secondInput = makeInput('3');
-      inputParser.parseFrame(firstInput, secondInput);
+      inputParser.parseFrame([firstInput, secondInput], '1');
       expect(frameMock.addScore).toHaveBeenCalledWith(4);
       expect(frameMock.addScore).toHaveBeenCalledWith(3);
       expect(gameMock.addFrame).toHaveBeenCalledWith(frameMock);
