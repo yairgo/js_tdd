@@ -1,0 +1,11 @@
+initially disable all inputs
+when first frame is complete disable first frame and enable 2nd, and on through the rest
+when clear input is clicked reset the page
+
+when a frame is added to the game, if it knows it's score display it under the frame
+
+display the current total score
+
+Make the input parser know what frame it is parsing and add the frame with the number to the game.
+
+
