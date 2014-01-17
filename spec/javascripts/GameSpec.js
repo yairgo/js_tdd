@@ -15,7 +15,7 @@ describe("Game", function() {
     strikeFrame.isTurnOver.and.returnValue(true);
     strikeFrame.isSpare.and.returnValue(false);
 
-    spareFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
+    spareFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'nextFrame']);
     spareFrame.getFirstRoll.and.returnValue(7);
     spareFrame.getScore.and.returnValue(10);
     spareFrame.isTurnOver.and.returnValue(true);
@@ -34,38 +34,61 @@ describe("Game", function() {
   });
   describe("can add a frame", function() {
     var frame;
+    var prevFrame;
+    var prevPrevFrame;
     beforeEach(function() {
-      frame = jasmine.createSpy('frame');
-      myGame.addFrame(frame);
+      frame = jasmine.createSpyObj('frame', ['nextFrame', 'nextNextFrame']);
+      prevFrame = jasmine.createSpyObj('previousFrame', ['nextFrame', 'nextNextFrame']);
+      prevPrevFrame = jasmine.createSpyObj('2 frames ago', ['nextFrame', 'nextNextFrame']);
     });
 
     it("adds the frame", function() {
+      myGame.addFrame(frame);
       var actual = myGame.getFrames()[0];
       expect(actual).toBe(frame);
     });
+    describe('notifies the view', function() {
+      beforeEach(function() {
+        myGame.frames = [frame, frame, frame]
+      });
+      it("to enable and disable", function() {
+        myGame.addFrame(frame);
+
+        expect(viewMock.disableFrame).toHaveBeenCalledWith(4);
+        expect(viewMock.enableFrame).toHaveBeenCalledWith(5);
+      });
+    });
+    describe('notifies previous frame', function() {
+      beforeEach(function() {
+        myGame.frames = [prevFrame]
+      });
+      it("of next frame", function() {
+        myGame.addFrame(frame);
+
+        expect(prevFrame.nextFrame).toHaveBeenCalledWith(frame);
+      });
+
+    });
+    describe('notifies previous two frame', function() {
+      beforeEach(function() {
+        myGame.frames = [prevPrevFrame, prevFrame]
+      });
+      it("of next frames", function() {
+        myGame.addFrame(frame);
+
+        expect(prevFrame.nextFrame).toHaveBeenCalledWith(frame);
+        expect(prevPrevFrame.nextNextFrame).toHaveBeenCalledWith(frame);
+      });
+    });
   });
 
-  describe("adding a frame notifies view", function() {
-    var frame;
-    beforeEach(function() {
-      frame = jasmine.createSpy('frame');
-      myGame.frames = [frame, frame, frame]
-    });
-
-    it("to enable and disable", function() {
-      myGame.addFrame(frame);
-
-      expect(viewMock.disableFrame).toHaveBeenCalledWith(4);
-      expect(viewMock.enableFrame).toHaveBeenCalledWith(5);
-    });
-  });
   describe("can get the total score of a game with one completed 9 pin frame", function() {
     var frame
     beforeEach(function() {
       frame = new Frame();
       frame.addScore(7);
       frame.addScore(2);
-      myGame.addFrame(frame);
+      myGame.frames = [frame];
     });
 
     it("should score 9 points", function() {
@@ -82,7 +105,7 @@ describe("Game", function() {
       normalFrame.isStrike.and.returnValue(false);
       normalFrame.isSpare.and.returnValue(false);
       normalFrame.isTurnOver.and.returnValue(true);
-      myGame.addFrame(normalFrame);
+      myGame.frames = [normalFrame];
     });
 
     it("should score 7 points", function() {
@@ -92,7 +115,7 @@ describe("Game", function() {
 
   describe("is frame complete for a strike", function() {
     beforeEach(function() {
-      myGame.addFrame(strikeFrame);
+      myGame.frames = [strikeFrame];
     });
 
     describe(" with 0 follow up rolls", function() {
@@ -103,7 +126,7 @@ describe("Game", function() {
 
     describe(" with 1 follow up roll", function() {
         beforeEach(function() {
-          myGame.addFrame(strikeFrame);
+          myGame.frames[myGame.frames.length] = strikeFrame;
         });
 
         it("should not be complete", function() {
@@ -114,8 +137,8 @@ describe("Game", function() {
 
     describe(" with 2 follow up rolls", function() {
         beforeEach(function() {
-          myGame.addFrame(strikeFrame);
-          myGame.addFrame(strikeFrame);
+          myGame.frames[myGame.frames.length] = strikeFrame;
+          myGame.frames[myGame.frames.length] = strikeFrame;
         });
 
         it("should be complete", function() {
@@ -130,7 +153,7 @@ describe("Game", function() {
       frame = new Frame();
       frame.addScore(4);
       frame.addScore(4);
-      myGame.addFrame(frame);
+      myGame.frames = [frame];
     });
 
     it("should be complete", function() {
@@ -141,9 +164,7 @@ describe("Game", function() {
 
   describe("getScoreForFrame for the first strike frame when there are two strikes after it", function() {
     beforeEach(function() {
-      myGame.addFrame(strikeFrame);
-      myGame.addFrame(strikeFrame);
-      myGame.addFrame(strikeFrame);
+      myGame.frames = [strikeFrame, strikeFrame, strikeFrame];
     });
 
     it("should score 30 points", function() {
@@ -153,8 +174,7 @@ describe("Game", function() {
 
   describe("getScoreForFrame for the first spare frame when there is a strike after it", function() {
     beforeEach(function() {
-      myGame.addFrame(spareFrame);
-      myGame.addFrame(strikeFrame);
+      myGame.frames = [spareFrame, strikeFrame];
     });
 
     it("should score 20 points", function() {
@@ -164,8 +184,7 @@ describe("Game", function() {
 
   describe("getScoreForFrame for the first strike frame when there is a spare after it", function() {
     beforeEach(function() {
-      myGame.addFrame(strikeFrame);
-      myGame.addFrame(spareFrame);
+      myGame.frames = [strikeFrame, spareFrame];
     });
 
     it("should score 20 points", function() {
@@ -176,7 +195,7 @@ describe("Game", function() {
   describe("a full game of strikes", function() {
     beforeEach(function() {
       for (var i = 0; i < 12; i++) {
-        myGame.addFrame(strikeFrame);
+        myGame.frames[myGame.frames.length] = strikeFrame;
       }
     });
 
@@ -188,7 +207,7 @@ describe("Game", function() {
   describe("a full game of spares with 7 pins in the first roll", function() {
     beforeEach(function() {
       for (var i = 0; i < 11; i++) {
-        myGame.addFrame(spareFrame);
+        myGame.frames[myGame.frames.length] = spareFrame;
       }
     });
 
@@ -200,7 +219,7 @@ describe("Game", function() {
   describe("getScoreUpToFrame returns the total score ", function() {
     beforeEach(function() {
       for (var i = 0; i < 6; i++) {
-        myGame.addFrame(spareFrame);
+        myGame.frames[myGame.frames.length] = spareFrame;
       }
     });
 
@@ -217,7 +236,7 @@ describe("Game", function() {
 
   describe("getTotalScore with one strike frame completed", function() {
     beforeEach(function() {
-      myGame.addFrame(strikeFrame);
+      myGame.frames = [strikeFrame];
     });
 
     it("should score 0 points because it's an incomplete frame", function() {

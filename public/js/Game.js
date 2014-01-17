@@ -99,7 +99,19 @@ Game.prototype.getScoreForNextRoll = function(frameIndex) {
 }
 
 Game.prototype.addFrame = function(frame) {
+    if(this.prevFrame()) {
+      this.prevFrame().nextFrame(frame);
+    }
+    if(this.prevPrevFrame()) {
+      this.prevPrevFrame().nextNextFrame(frame);
+    }
     this.frames[this.frames.length] = frame;
     this.view.disableFrame(this.frames.length);
     this.view.enableFrame(this.frames.length + 1);
 };
+Game.prototype.prevFrame = function(frame) {
+    return this.frames[this.frames.length - 1];
+}
+Game.prototype.prevPrevFrame = function(frame) {
+    return this.frames[this.frames.length - 2];
+}
