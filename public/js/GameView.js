@@ -11,7 +11,9 @@ GameView.prototype.enableFrame = function(number) {
   $(selector).removeAttr('disabled');
   $($(selector)[0]).focus();
 }
-
+GameView.prototype.displayTotal = function(value) {
+  $('#total').html(value);
+}
 GameView.prototype.disableFrame = function(number) {
   $(this.frameInputSelector(number)).prop('disabled', true);
 }

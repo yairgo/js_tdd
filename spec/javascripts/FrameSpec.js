@@ -137,4 +137,67 @@ describe("Frame", function() {
       });
     });
   })
+  describe('isFinished', function() {
+    describe('when open', function() {
+      it('should be correct', function() {
+        var to = new Frame();
+        to.addScore(4);
+
+        expect(to.isFinished()).toBeFalsy();
+
+        to.addScore(3);
+
+        expect(to.isFinished()).toBeTruthy();
+      });
+    });
+    describe('when spare', function() {
+      it('should be correct', function() {
+        var to = new Frame();
+        to.addScore(4);
+        to.addScore(6);
+        expect(to.isFinished()).toBeFalsy();
+        var next = new Frame();
+        next.addScore(5);
+        to.nextFrame(next);
+        expect(to.isFinished()).toBeTruthy();
+      });
+    });
+    describe('when strike', function() {
+      var to;
+      beforeEach(function() {
+        to = new Frame();
+        to.addScore(10);
+      })
+      it('with another strike', function() {
+        var strike = new Frame();
+        strike.addScore(10);
+        to.nextFrame(strike);
+
+        expect(to.isFinished()).toBeFalsy();
+        to.nextNextFrame(strike);
+        expect(to.isFinished()).toBeTruthy();
+
+
+      })
+      it('with a spare', function() {
+        var spare = new Frame();
+        spare.addScore(4); spare.addScore(6);
+        to.nextFrame(spare);
+
+        expect(to.isFinished()).toBeTruthy();
+      });
+      it('with an open', function() {
+        var open = new Frame();
+        open.addScore(4); open.addScore(5);
+        to.nextFrame(open);
+
+        expect(to.isFinished()).toBeTruthy();
+      });
+      it('with an unfinished next frame', function() {
+        var next = new Frame();
+        next.addScore(3);
+
+      });
+    });
+  });
 });

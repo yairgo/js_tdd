@@ -25,7 +25,7 @@ Game.prototype.getScoreForFrame = function(frameIndex) {
     if (!this.isFrameComplete(frameIndex)) {
         return 0;
     }
-    var score = frame.getScore();
+    var score = frame.getCount();
     if (frame.isStrike()) {
         score += this.getScoreForNextTwoRolls(frameIndex + 1);
     } else if (frame.isSpare()) {
@@ -81,7 +81,7 @@ Game.prototype.getScoreForNextTwoRolls = function(frameIndex) {
     if(!thisFrame) {
         return 0;
     }
-    var score = thisFrame.getScore();
+    var score = thisFrame.getCount();
     if (thisFrame.isStrike()) {
         score += this.getScoreForNextRoll(frameIndex + 1);
     }
@@ -108,6 +108,7 @@ Game.prototype.addFrame = function(frame) {
     this.frames[this.frames.length] = frame;
     this.view.disableFrame(this.frames.length);
     this.view.enableFrame(this.frames.length + 1);
+    // this.view.displayTotal(this.getTotalScore());
 };
 Game.prototype.prevFrame = function(frame) {
     return this.frames[this.frames.length - 1];

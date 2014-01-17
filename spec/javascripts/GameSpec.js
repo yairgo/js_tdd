@@ -8,16 +8,16 @@ describe("Game", function() {
     viewMock = jasmine.createSpyObj('view', ['reset', 'enableFrame', 'disableFrame']);
     myGame = new Game(viewMock);
 
-    strikeFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
-    strikeFrame.getScore.and.returnValue(10);
+    strikeFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
+    strikeFrame.getCount.and.returnValue(10);
     strikeFrame.getFirstRoll.and.returnValue(10);
     strikeFrame.isStrike.and.returnValue(true);
     strikeFrame.isTurnOver.and.returnValue(true);
     strikeFrame.isSpare.and.returnValue(false);
 
-    spareFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'nextFrame']);
+    spareFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'nextFrame']);
     spareFrame.getFirstRoll.and.returnValue(7);
-    spareFrame.getScore.and.returnValue(10);
+    spareFrame.getCount.and.returnValue(10);
     spareFrame.isTurnOver.and.returnValue(true);
     spareFrame.isStrike.and.returnValue(false);
     spareFrame.isSpare.and.returnValue(true);
@@ -99,9 +99,9 @@ describe("Game", function() {
   describe("can get the current total score of an incomplete game", function() {
     var normalFrame
     beforeEach(function() {
-      normalFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
+      normalFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
       normalFrame.getFirstRoll.and.returnValue(7);
-      normalFrame.getScore.and.returnValue(7);
+      normalFrame.getCount.and.returnValue(7);
       normalFrame.isStrike.and.returnValue(false);
       normalFrame.isSpare.and.returnValue(false);
       normalFrame.isTurnOver.and.returnValue(true);

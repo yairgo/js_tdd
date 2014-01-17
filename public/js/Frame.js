@@ -66,3 +66,17 @@ Frame.prototype.nextFrame = function(frame) {
 Frame.prototype.nextNextFrame = function(frame) {
   this._nextNextFrame = frame;
 }
+Frame.prototype.isFinished = function() {
+  if(this.isOpen()) {
+    return this.secondScore != undefined;
+  } else if(this.isSpare()) {
+    return this._nextFrame != undefined;
+  } else if(this.isStrike()) {
+    if(this._nextFrame) {
+      if(this._nextFrame.isStrike()) {
+        return this._nextNextFrame != undefined;
+      }
+      return this._nextFrame.isTurnOver();
+    }
+  }
+}
