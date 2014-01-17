@@ -35,8 +35,10 @@ describe("Game", function() {
   describe("can get the score for the first frame when there are two strikes after it", function() {
     var frame;
     beforeEach(function() {
-      frame = new Frame();
-      frame.addScore(10);
+      frame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'getFirstRoll']);
+      frame.getScore.and.returnValue(10);
+      frame.isStrike.and.returnValue(true);
+      frame.getFirstRoll.and.returnValue(10);
       myGame.addFrame(frame);
       myGame.addFrame(frame);
       myGame.addFrame(frame);
