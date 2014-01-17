@@ -106,6 +106,12 @@ describe("Frame", function() {
         expect(to.getScore()).toEqual(20);
       });
     });
+    describe('strike with no next balls', function() {
+      it('should be 10', function() {
+        var to = new Frame(10);
+        expect(to.getScore()).toEqual(10);
+      });
+    })
     describe('strike with spare', function(){
       it('should be 20', function() {
         var to = new Frame(10);
