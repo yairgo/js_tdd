@@ -5,17 +5,17 @@ describe("Game", function() {
   var viewMock;
 
   beforeEach(function() {
-    viewMock = jasmine.createSpyObj('view', ['reset', 'enableFrame', 'disableFrame']);
+    viewMock = jasmine.createSpyObj('view', ['reset', 'enableFrame', 'disableFrame', 'displayTotal']);
     myGame = new Game(viewMock);
 
-    strikeFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
+    strikeFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'isFinished']);
     strikeFrame.getCount.and.returnValue(10);
     strikeFrame.getFirstRoll.and.returnValue(10);
     strikeFrame.isStrike.and.returnValue(true);
     strikeFrame.isTurnOver.and.returnValue(true);
     strikeFrame.isSpare.and.returnValue(false);
 
-    spareFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'nextFrame']);
+    spareFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'nextFrame', 'isFinished']);
     spareFrame.getFirstRoll.and.returnValue(7);
     spareFrame.getCount.and.returnValue(10);
     spareFrame.isTurnOver.and.returnValue(true);
@@ -25,7 +25,7 @@ describe("Game", function() {
 
   describe('starting a game', function() {
     it('start should reset view and frames', function() {
-      myGame.addFrame(spareFrame);
+      myGame.frames = [spareFrame];
 
       myGame.start();
       expect(viewMock.reset).toHaveBeenCalled();
@@ -37,9 +37,9 @@ describe("Game", function() {
     var prevFrame;
     var prevPrevFrame;
     beforeEach(function() {
-      frame = jasmine.createSpyObj('frame', ['nextFrame', 'nextNextFrame']);
-      prevFrame = jasmine.createSpyObj('previousFrame', ['nextFrame', 'nextNextFrame']);
-      prevPrevFrame = jasmine.createSpyObj('2 frames ago', ['nextFrame', 'nextNextFrame']);
+      frame = jasmine.createSpyObj('frame', ['nextFrame', 'nextNextFrame', 'getScore']);
+      prevFrame = jasmine.createSpyObj('previousFrame', ['nextFrame', 'nextNextFrame', 'getScore']);
+      prevPrevFrame = jasmine.createSpyObj('2 frames ago', ['nextFrame', 'nextNextFrame', 'getScore']);
     });
 
     it("adds the frame", function() {
@@ -99,12 +99,8 @@ describe("Game", function() {
   describe("can get the current total score of an incomplete game", function() {
     var normalFrame
     beforeEach(function() {
-      normalFrame = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
-      normalFrame.getFirstRoll.and.returnValue(7);
-      normalFrame.getCount.and.returnValue(7);
-      normalFrame.isStrike.and.returnValue(false);
-      normalFrame.isSpare.and.returnValue(false);
-      normalFrame.isTurnOver.and.returnValue(true);
+      normalFrame = jasmine.createSpyObj('frame', ['getScore']);
+      normalFrame.getScore.and.returnValue(7);
       myGame.frames = [normalFrame];
     });
 
@@ -113,57 +109,9 @@ describe("Game", function() {
     });
   });
 
-  describe("is frame complete for a strike", function() {
-    beforeEach(function() {
-      myGame.frames = [strikeFrame];
-    });
-
-    describe(" with 0 follow up rolls", function() {
-        it("should not be complete", function() {
-            expect(myGame.isFrameComplete(0)).toBeFalsy();
-        });
-    });
-
-    describe(" with 1 follow up roll", function() {
-        beforeEach(function() {
-          myGame.frames[myGame.frames.length] = strikeFrame;
-        });
-
-        it("should not be complete", function() {
-            expect(myGame.isFrameComplete(0)).toBeFalsy();
-        });
-    });
-
-
-    describe(" with 2 follow up rolls", function() {
-        beforeEach(function() {
-          myGame.frames[myGame.frames.length] = strikeFrame;
-          myGame.frames[myGame.frames.length] = strikeFrame;
-        });
-
-        it("should be complete", function() {
-            expect(myGame.isFrameComplete(0)).toBeTruthy();
-        });
-    });
-  });
-
-  describe("a completed frame", function() {
-    var frame;
-    beforeEach(function() {
-      frame = new Frame();
-      frame.addScore(4);
-      frame.addScore(4);
-      myGame.frames = [frame];
-    });
-
-    it("should be complete", function() {
-      expect(myGame.isFrameComplete(0)).toBeTruthy();
-    });
-  });
-
-
   describe("getScoreForFrame for the first strike frame when there are two strikes after it", function() {
     beforeEach(function() {
+      strikeFrame.isFinished.and.returnValue(true)
       myGame.frames = [strikeFrame, strikeFrame, strikeFrame];
     });
 
@@ -174,6 +122,7 @@ describe("Game", function() {
 
   describe("getScoreForFrame for the first spare frame when there is a strike after it", function() {
     beforeEach(function() {
+      spareFrame.isFinished.and.returnValue(true);
       myGame.frames = [spareFrame, strikeFrame];
     });
 
@@ -184,6 +133,7 @@ describe("Game", function() {
 
   describe("getScoreForFrame for the first strike frame when there is a spare after it", function() {
     beforeEach(function() {
+      strikeFrame.isFinished.and.returnValue(true);
       myGame.frames = [strikeFrame, spareFrame];
     });
 
@@ -192,39 +142,20 @@ describe("Game", function() {
     });
   });
 
-  describe("a full game of strikes", function() {
-    beforeEach(function() {
-      for (var i = 0; i < 12; i++) {
-        myGame.frames[myGame.frames.length] = strikeFrame;
-      }
-    });
-
-    it("should score 300 points", function() {
-        expect(myGame.getTotalScore()).toEqual(300);
-    });
-  });
-
-  describe("a full game of spares with 7 pins in the first roll", function() {
-    beforeEach(function() {
-      for (var i = 0; i < 11; i++) {
-        myGame.frames[myGame.frames.length] = spareFrame;
-      }
-    });
-
-    it("should score 170 points", function() {
-        expect(myGame.getTotalScore()).toEqual(170);
-    });
-  });
-
   describe("getScoreUpToFrame returns the total score ", function() {
     beforeEach(function() {
-      for (var i = 0; i < 6; i++) {
+      for (var i = 0; i < 5; i++) {
+        spareFrame.isFinished.and.returnValue(true);
         myGame.frames[myGame.frames.length] = spareFrame;
       }
+      var last = jasmine.createSpyObj('frame', ['getCount', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll', 'nextFrame', 'isFinished']);
+      last.getFirstRoll.and.returnValue(7);
+      last.isTurnOver.and.returnValue(false);
+      myGame.frames[myGame.frames.length] = last
+      console.log(myGame.frames.length);
     });
 
     it("should score the appropriate points", function() {
-        expect(myGame.getScoreForFrame(0)).toEqual(17);
         expect(myGame.getScoreUpToFrame(0)).toEqual(17);
         expect(myGame.getScoreUpToFrame(1)).toEqual(34);
         expect(myGame.getScoreUpToFrame(2)).toEqual(51);
@@ -234,13 +165,4 @@ describe("Game", function() {
     });
   });
 
-  describe("getTotalScore with one strike frame completed", function() {
-    beforeEach(function() {
-      myGame.frames = [strikeFrame];
-    });
-
-    it("should score 0 points because it's an incomplete frame", function() {
-        expect(myGame.getTotalScore()).toEqual(0);
-    });
-  });
 });

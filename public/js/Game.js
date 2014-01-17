@@ -11,7 +11,8 @@ Game.prototype.start = function() {
 Game.prototype.getTotalScore = function() {
     var score = 0;
     for(var i = 0; i < this.frames.length; i++) {
-        score += this.getScoreForFrame(i);
+      var f = this.frames[i];
+        score += f.getScore();
     }
     return score;
 };
@@ -22,7 +23,7 @@ Game.prototype.getFrames = function() {
 
 Game.prototype.getScoreForFrame = function(frameIndex) {
     var frame = this.frames[frameIndex];
-    if (!this.isFrameComplete(frameIndex)) {
+    if (!frame.isFinished()) {
         return 0;
     }
     var score = frame.getCount();
@@ -34,37 +35,10 @@ Game.prototype.getScoreForFrame = function(frameIndex) {
     return score;
 };
 
-Game.prototype.frameExists = function(frameIndex) {
-    return !!this.frames[frameIndex];
-}
-
-Game.prototype.isFrameComplete = function(frameIndex) {
-    if(!this.frameExists(frameIndex)) {
-        return false;
-    }
-
-    var thisFrame = this.frames[frameIndex];
-    if (thisFrame.isStrike()) {
-        if(!this.frameExists(frameIndex + 1)) {
-            return false;
-        }
-        var nextFrame = this.frames[frameIndex + 1];
-        if (nextFrame.isStrike()) {
-            return this.frameExists(frameIndex + 2);
-        }
-        return true;
-    } else if (thisFrame.isSpare()) {
-        return this.frameExists(frameIndex + 1);
-    } else {
-        return thisFrame.isTurnOver();
-    }
-    return false;
-};
-
-
 Game.prototype.getScoreUpToFrame = function(frameIndex) {
     var score = 0;
-    if (!this.isFrameComplete(frameIndex)) {
+    var frame = this.frames[frameIndex];
+    if (!frame.isFinished()) {
         return "";
     }
 
@@ -108,7 +82,7 @@ Game.prototype.addFrame = function(frame) {
     this.frames[this.frames.length] = frame;
     this.view.disableFrame(this.frames.length);
     this.view.enableFrame(this.frames.length + 1);
-    // this.view.displayTotal(this.getTotalScore());
+    this.view.displayTotal(this.getTotalScore());
 };
 Game.prototype.prevFrame = function(frame) {
     return this.frames[this.frames.length - 1];
