@@ -1,10 +1,15 @@
-function Game() {
+function Game(numberOfFrames) {
+    this.maxFrames = (numberOfFrames) ? numberOfFrames : 10;
+        
     this.frames = [];
 }
 Game.prototype.getTotalScore = function() {
     var score = 0;
-    for(var i = 0; i < this.frames.length; i++) {
-        score += this.frames[i].getScore();
+    for(var i = 0; i < this.maxFrames; i++) {
+        if (i >= this.frames.length) { 
+            break;
+        }
+        score += this.getScoreForFrame(i);
     }
     return score;
 };
@@ -36,6 +41,9 @@ Game.prototype.getScoreForNextTwoRolls = function(frameIndex) {
 
 Game.prototype.getScoreForNextRoll = function(frameIndex) {
     var thisFrame = this.frames[frameIndex];
+    if(!thisFrame) {
+        return 0; 
+    }
     
     return thisFrame.getFirstRoll()
 }

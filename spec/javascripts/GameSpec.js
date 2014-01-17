@@ -33,15 +33,28 @@ describe("Game", function() {
   });
   
   describe("can get the total score", function() {
-    var frame;
     beforeEach(function() {
-      frame = jasmine.createSpyObj('frame', ['getScore']);
-      frame.getScore.and.returnValue(10);
-      myGame.addFrame(frame);
+      myGame.addFrame(spareFrame);
     });
     
     it("should score 10 points", function() {
         expect(myGame.getTotalScore()).toEqual(10);
+    });
+  });
+  
+  describe("can get the current total score of an incomplete game", function() {
+    var normalFrame
+    beforeEach(function() {
+      normalFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isSpare', 'getFirstRoll']);
+      normalFrame.getFirstRoll.and.returnValue(7);
+      normalFrame.getScore.and.returnValue(7);
+      normalFrame.isStrike.and.returnValue(false);
+      normalFrame.isSpare.and.returnValue(false);
+      myGame.addFrame(normalFrame);
+    });
+    
+    it("should score 7 points", function() {
+        expect(myGame.getTotalScore()).toEqual(7);
     });
   });
   
@@ -77,6 +90,18 @@ describe("Game", function() {
 
     it("should score 20 points", function() {
         expect(myGame.getScoreForFrame(0)).toEqual(20);
+    });
+  });
+  
+  describe("a full game of strikes", function() {
+    beforeEach(function() {
+      for (var i = 0; i < 12; i++) { 
+        myGame.addFrame(strikeFrame);
+      }
+    });
+
+    it("should score 300 points", function() {
+        expect(myGame.getTotalScore()).toEqual(300);
     });
   });
 });
