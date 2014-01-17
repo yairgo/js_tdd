@@ -48,13 +48,9 @@ describe("Game", function() {
   describe("can get the score for the first frame when there are two strikes after it", function() {
     var frame;
     beforeEach(function() {
-      frame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'getFirstRoll']);
-      frame.getScore.and.returnValue(10);
-      frame.isStrike.and.returnValue(true);
-      frame.getFirstRoll.and.returnValue(10);
-      myGame.addFrame(frame);
-      myGame.addFrame(frame);
-      myGame.addFrame(frame);
+      myGame.addFrame(strikeFrame);
+      myGame.addFrame(strikeFrame);
+      myGame.addFrame(strikeFrame);
     });
 
     it("should score 30 points", function() {
@@ -66,7 +62,17 @@ describe("Game", function() {
     beforeEach(function() {
       myGame.addFrame(spareFrame);
       myGame.addFrame(strikeFrame);
-      
+    });
+
+    it("should score 20 points", function() {
+        expect(myGame.getScoreForFrame(0)).toEqual(20);
+    });
+  });
+  
+  describe("can get the score for the first strike frame when there is a spare after it", function() {
+    beforeEach(function() {
+      myGame.addFrame(strikeFrame);
+      myGame.addFrame(spareFrame);
     });
 
     it("should score 20 points", function() {
