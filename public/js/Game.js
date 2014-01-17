@@ -20,6 +20,9 @@ Game.prototype.getFrames = function() {
 
 Game.prototype.getScoreForFrame = function(frameIndex) {
     var frame = this.frames[frameIndex];
+    if (!this.isFrameComplete(frameIndex)) {
+        return 0;
+    }
     var score = frame.getScore();
     if (frame.isStrike()) {
         score += this.getScoreForNextTwoRolls(frameIndex + 1);
@@ -28,6 +31,34 @@ Game.prototype.getScoreForFrame = function(frameIndex) {
     }
     return score;
 };
+
+Game.prototype.frameExists = function(frameIndex) {
+    return !!this.frames[frameIndex]; 
+}
+
+Game.prototype.isFrameComplete = function(frameIndex) {
+    if(!this.frameExists(frameIndex)) { 
+        return false; 
+    }
+
+    var thisFrame = this.frames[frameIndex];
+    if (thisFrame.isStrike()) {
+        if(!this.frameExists(frameIndex + 1)) { 
+            return false; 
+        }
+        var nextFrame = this.frames[frameIndex + 1];
+        if (nextFrame.isStrike()) { 
+            return this.frameExists(frameIndex + 2);
+        }
+        return true;
+    } else if (thisFrame.isSpare()) {
+        return this.frameExists(frameIndex + 1);
+    } else {
+        return thisFrame.isTurnOver();
+    }
+    return false;
+};
+
 
 Game.prototype.getScoreForNextTwoRolls = function(frameIndex) {
     var thisFrame = this.frames[frameIndex];

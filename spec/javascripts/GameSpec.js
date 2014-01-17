@@ -6,15 +6,17 @@ describe("Game", function() {
   beforeEach(function() {
     myGame = new Game();
     
-    strikeFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isSpare', 'getFirstRoll']);
+    strikeFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
     strikeFrame.getScore.and.returnValue(10);
     strikeFrame.getFirstRoll.and.returnValue(10);
     strikeFrame.isStrike.and.returnValue(true);
+    strikeFrame.isTurnOver.and.returnValue(true);
     strikeFrame.isSpare.and.returnValue(false);
     
-    spareFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isSpare', 'getFirstRoll']);
+    spareFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
     spareFrame.getFirstRoll.and.returnValue(7);
     spareFrame.getScore.and.returnValue(10);
+    spareFrame.isTurnOver.and.returnValue(true);
     spareFrame.isStrike.and.returnValue(false);
     spareFrame.isSpare.and.returnValue(true);
   });
@@ -33,23 +35,28 @@ describe("Game", function() {
   });
   
   describe("can get the total score", function() {
+    var frame
     beforeEach(function() {
-      myGame.addFrame(spareFrame);
+      frame = new Frame();
+      frame.addScore(7);
+      frame.addScore(2);
+      myGame.addFrame(frame);
     });
     
-    it("should score 10 points", function() {
-        expect(myGame.getTotalScore()).toEqual(10);
+    it("should score 9 points", function() {
+        expect(myGame.getTotalScore()).toEqual(9);
     });
   });
   
   describe("can get the current total score of an incomplete game", function() {
     var normalFrame
     beforeEach(function() {
-      normalFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isSpare', 'getFirstRoll']);
+      normalFrame = jasmine.createSpyObj('frame', ['getScore', 'isStrike', 'isTurnOver', 'isSpare', 'getFirstRoll']);
       normalFrame.getFirstRoll.and.returnValue(7);
       normalFrame.getScore.and.returnValue(7);
       normalFrame.isStrike.and.returnValue(false);
       normalFrame.isSpare.and.returnValue(false);
+      normalFrame.isTurnOver.and.returnValue(true);
       myGame.addFrame(normalFrame);
     });
     
@@ -58,8 +65,56 @@ describe("Game", function() {
     });
   });
   
-  describe("can get the score for the first frame when there are two strikes after it", function() {
+  describe("a strike", function() {
+    beforeEach(function() {
+      myGame.addFrame(strikeFrame);
+    });
+    
+    describe(" with 0 follow up rolls", function() {
+        it("should not be complete", function() {
+            expect(myGame.isFrameComplete(0)).toBeFalsy();
+        }); 
+    });
+    
+    describe(" with 1 follow up roll", function() {
+        beforeEach(function() {
+          myGame.addFrame(strikeFrame);
+        });
+        
+        it("should not be complete", function() {
+            expect(myGame.isFrameComplete(0)).toBeFalsy();
+        }); 
+    });
+    
+    
+    describe(" with 2 follow up rolls", function() {
+        beforeEach(function() {
+          myGame.addFrame(strikeFrame);
+          myGame.addFrame(strikeFrame);
+        });
+        
+        it("should be complete", function() {
+            expect(myGame.isFrameComplete(0)).toBeTruthy();
+        }); 
+    });
+  });
+  
+  describe("a completed frame", function() {
     var frame;
+    beforeEach(function() {
+      frame = new Frame();
+      frame.addScore(4);
+      frame.addScore(4);
+      myGame.addFrame(frame);
+    });
+        
+    it("should be complete", function() {
+      expect(myGame.isFrameComplete(0)).toBeTruthy();
+    }); 
+  });
+  
+  
+  describe("can get the score for the first frame when there are two strikes after it", function() {
     beforeEach(function() {
       myGame.addFrame(strikeFrame);
       myGame.addFrame(strikeFrame);
@@ -114,6 +169,16 @@ describe("Game", function() {
 
     it("should score 170 points", function() {
         expect(myGame.getTotalScore()).toEqual(170);
+    });
+  });
+  
+  describe("a game with one frame completed", function() {
+    beforeEach(function() {
+      myGame.addFrame(strikeFrame);
+    });
+
+    it("should score 0 points because it's an incomplete frame", function() {
+        expect(myGame.getTotalScore()).toEqual(0);
     });
   });
 });
