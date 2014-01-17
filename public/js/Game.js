@@ -31,6 +31,9 @@ Game.prototype.getScoreForFrame = function(frameIndex) {
 
 Game.prototype.getScoreForNextTwoRolls = function(frameIndex) {
     var thisFrame = this.frames[frameIndex];
+    if(!thisFrame) {
+        return 0; 
+    }
     var score = thisFrame.getScore();
     if (thisFrame.isStrike()) {
         score += this.getScoreForNextRoll(frameIndex + 1);

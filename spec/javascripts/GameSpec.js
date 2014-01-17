@@ -104,4 +104,16 @@ describe("Game", function() {
         expect(myGame.getTotalScore()).toEqual(300);
     });
   });
+  
+  describe("a full game of spares", function() {
+    beforeEach(function() {
+      for (var i = 0; i < 11; i++) { 
+        myGame.addFrame(spareFrame);
+      }
+    });
+
+    it("should score 170 points", function() {
+        expect(myGame.getTotalScore()).toEqual(170);
+    });
+  });
 });
