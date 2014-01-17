@@ -76,4 +76,72 @@ function Frame(firstScore, secondScore) {
 }
 function Strike() {
   Frame.apply(this, [10, 0]);
+  
+    this.getScore = function() {
+      if(this.isStrike()) {
+        if(this._nextFrame) {
+          if(this._nextFrame.isOpen()) {
+            return 10 + this._nextFrame.getCount()
+          } else if(this._nextFrame.isSpare()) {
+            return 20;
+          } else {
+            if(this._nextNextFrame) {
+              return 20 + this._nextNextFrame.firstScore;
+            } else {
+              return 20;
+            }
+          }
+        }
+      return this.getCount();
+    };
 }
+function Spare() {
+  Frame.apply(this, [10, 0]);
+  
+this.getScore = function() {
+    if(this._nextFrame) {
+      return 10 + this._nextFrame.getCount();
+    }
+    
+      return this.getCount();
+    };
+}
+function Open() {
+  Frame.apply(this, [10, 0]);
+  this.getScore = function() {
+      return this.getCount();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+this.getScore = function() {
+      if(this.isStrike()) {
+        if(this._nextFrame) {
+          if(this._nextFrame.isOpen()) {
+            return 10 + this._nextFrame.getCount()
+          } else if(this._nextFrame.isSpare()) {
+            return 20;
+          } else {
+            if(this._nextNextFrame) {
+              return 20 + this._nextNextFrame.firstScore;
+            } else {
+              return 20;
+            }
+          }
+        }
+      } else if(this.isSpare()) {
+        if(this._nextFrame) {
+          return 10 + this._nextFrame.getCount();
+        }
+          }
+      return this.getCount();
+    };
