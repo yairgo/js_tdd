@@ -18,6 +18,8 @@ Game.prototype.getScoreForFrame = function(frameIndex) {
     var score = frame.getScore();
     if (frame.isStrike()) {
         score += this.getScoreForNextTwoRolls(frameIndex + 1);
+    } else if (frame.isSpare()) {
+        score += this.getScoreForNextRoll(frameIndex + 1);
     }
     return score;
 };
