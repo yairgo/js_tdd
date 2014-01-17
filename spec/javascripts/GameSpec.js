@@ -8,22 +8,21 @@ describe("Game", function() {
   describe("can add a frame", function() {
     var frame;
     beforeEach(function() {
-      frame = new Frame();
-      frame.addScore(10);
+      frame = jasmine.createSpy('frame');
       myGame.addFrame(frame);
     });
 
     it("adds the frame", function() {
       var actual = myGame.getFrames()[0];
-      expect(actual).toEqual(frame);
+      expect(actual).toBe(frame);
     });
   });
   
   describe("can get the total score", function() {
     var frame;
     beforeEach(function() {
-      frame = new Frame();
-      frame.addScore(10);
+      frame = jasmine.createSpyObj('frame', ['getScore']);
+      frame.getScore.and.returnValue(10);
       myGame.addFrame(frame);
     });
     
