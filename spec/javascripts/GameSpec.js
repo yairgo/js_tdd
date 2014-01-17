@@ -34,7 +34,7 @@ describe("Game", function() {
     });
   });
   
-  describe("can get the total score", function() {
+  describe("can get the total score of a game with one completed 9 pin frame", function() {
     var frame
     beforeEach(function() {
       frame = new Frame();
@@ -65,7 +65,7 @@ describe("Game", function() {
     });
   });
   
-  describe("a strike", function() {
+  describe("is frame complete for a strike", function() {
     beforeEach(function() {
       myGame.addFrame(strikeFrame);
     });
@@ -114,7 +114,7 @@ describe("Game", function() {
   });
   
   
-  describe("can get the score for the first frame when there are two strikes after it", function() {
+  describe("getScoreForFrame for the first strike frame when there are two strikes after it", function() {
     beforeEach(function() {
       myGame.addFrame(strikeFrame);
       myGame.addFrame(strikeFrame);
@@ -126,7 +126,7 @@ describe("Game", function() {
     });
   });
   
-  describe("can get the score for the first spare frame when there is a strike after it", function() {
+  describe("getScoreForFrame for the first spare frame when there is a strike after it", function() {
     beforeEach(function() {
       myGame.addFrame(spareFrame);
       myGame.addFrame(strikeFrame);
@@ -137,7 +137,7 @@ describe("Game", function() {
     });
   });
   
-  describe("can get the score for the first strike frame when there is a spare after it", function() {
+  describe("getScoreForFrame for the first strike frame when there is a spare after it", function() {
     beforeEach(function() {
       myGame.addFrame(strikeFrame);
       myGame.addFrame(spareFrame);
@@ -160,7 +160,7 @@ describe("Game", function() {
     });
   });
   
-  describe("a full game of spares", function() {
+  describe("a full game of spares with 7 pins in the first roll", function() {
     beforeEach(function() {
       for (var i = 0; i < 11; i++) { 
         myGame.addFrame(spareFrame);
@@ -172,7 +172,7 @@ describe("Game", function() {
     });
   });
   
-  describe("a game with one frame completed", function() {
+  describe("getTotalScore with one strike frame completed", function() {
     beforeEach(function() {
       myGame.addFrame(strikeFrame);
     });
